@@ -37,6 +37,11 @@ td.note { color:var(--muted); white-space:normal; }
 .badge.stopped { background:color-mix(in srgb,var(--amber) 18%,transparent); color:var(--amber); }
 .wrap { overflow-x:auto; }
 .foot { color:var(--muted); font-size:.75rem; margin-top:1.5rem; }
+.compare { margin-top:2rem; }
+.compare h2 { font-size:1.05rem; margin-bottom:.5rem; }
+.compare p { color:var(--muted); font-size:.85rem; margin-bottom:.8rem; }
+.compare table { font-size:.82rem; }
+.compare td.win { color:var(--green); font-weight:700; }
 </style>
 </head>
 <body>
@@ -85,6 +90,33 @@ QQQM 30%p를 TQQQ로 전환 → QQQM 20% / QLD 50% / TQQQ 30%</li>
         </tr>
 </tbody>
 </table>
+</div>
+
+<div class="compare">
+<h2>참고: 다른 전략과의 27년 비교</h2>
+<p><a href="https://qld-qqqm.vercel.app/" target="_blank" rel="noopener">qld-qqqm.vercel.app</a>의
+"QLD·QQQM 국면 리밸런싱"(4자산 국면 전환 + 사상최고가 대비 하락 밴드 매수) 전략을 동일한
+1999~2026 엔진(닷컴버블·금융위기 포함, 거래비용 5bp)에 재현해 비교. 그쪽 공개 백테스트 구간(2016–2025)
+재현 결과는 6.73배·연 21.1%·MDD -37.0%로 원 사이트 공표치(6.58배·20.8%·-37%)와 근접해 재현 신뢰도를 확인함.</p>
+<div class="wrap">
+<table>
+<thead><tr><th>구간</th><th>현행 모델</th><th>vercel 국면+밴드</th></tr></thead>
+<tbody>
+<tr><td>CAGR 전기간 (1999–2026)</td><td class="win">+15.9%</td><td>+13.1%</td></tr>
+<tr><td>MDD 전기간</td><td class="win">-49.5%</td><td>-64.4%</td></tr>
+<tr><td>샤프 전기간</td><td class="win">0.63</td><td>0.51</td></tr>
+<tr><td>CAGR 폭락기(1999–2009)</td><td class="win">+9.7%</td><td>+4.6%</td></tr>
+<tr><td>CAGR 2010년대</td><td>+13.9%</td><td class="win">+16.8%</td></tr>
+<tr><td>CAGR 2020년대</td><td class="win">+29.8%</td><td>+22.1%</td></tr>
+<tr><td>2016–2025 재현 (그쪽 공표 구간)</td><td class="win">29.6%·MDD -49.5%</td><td>21.1%·MDD -37.0%</td></tr>
+</tbody>
+</table>
+</div>
+<p>전기간 기준 현행 모델이 CAGR·MDD·샤프 모두 우위. 원인은 vercel 전략의 하락 밴드 매수가 상시(일별)
+발동되는 반면 방어(국면 C 전환)는 월말에만 판정되어, 급락 구간에서 매수가 방어보다 먼저 실탄을
+소진하기 때문으로 분석됨(닷컴버블처럼 -35% 이상 지속 하락하는 구간에서 특히 불리). 반대로 2010년대
+같은 완만한 조정기에는 vercel의 상시 밴드 매수가 더 유리했음 — 두 전략 모두 특정 하락 패턴에
+최적화된 트레이드오프이며, 절대적 우열이 아닌 구조적 차이로 해석 필요.</p>
 </div>
 
 <p class="foot">백테스트(1999–2026, CAGR 16.3% / MDD -54%, 샤프 0.63) 기반 리서치 도구이며 투자자문이 아닙니다.
