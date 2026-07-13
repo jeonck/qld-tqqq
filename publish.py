@@ -92,6 +92,7 @@ h1 {{ font-size:1.4rem; margin-bottom:.3rem; }}
 .card {{ background:var(--card); border:1px solid var(--line); border-radius:12px;
         padding:1.2rem 1.5rem; margin-bottom:2rem; }}
 .card .state {{ font-size:1.5rem; font-weight:700; margin:.2rem 0 .6rem; }}
+.card .mdd {{ font-size:.85rem; font-weight:400; color:var(--muted); white-space:nowrap; }}
 .grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:.8rem; }}
 .grid div span {{ display:block; color:var(--muted); font-size:.75rem; }}
 .grid div b {{ font-size:1.05rem; }}
@@ -128,7 +129,8 @@ QQQM 30%p를 TQQQ로 전환 → QQQM 20% / QLD 50% / TQQQ 30%</li>
 
 <div class="card">
   <span class="badge {badge}">{latest['date']}</span>
-  <div class="state">{latest['state_label']} — {latest['alloc']}</div>
+  <div class="state">{latest['state_label']} — {latest['alloc']}
+  <span class="mdd">(과거 운영 시 총자산 최대 낙폭 -54%, 1999~)</span></div>
   <div class="grid">
     <div><span>QQQM 종가</span><b>{latest['qqqm']:,.2f}</b></div>
     <div><span>52주 고점 대비</span><b>{latest['dd']:+.1%}</b></div>
