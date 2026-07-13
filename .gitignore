@@ -1,0 +1,7 @@
+prices.parquet
+__pycache__/
+*.pyc
+results.png
+results.csv
+optimal.png
+grid_results.csv

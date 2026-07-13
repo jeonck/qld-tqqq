@@ -1,0 +1,38 @@
+name: daily-signal
+
+on:
+  schedule:
+    # 미국 장 마감(16:00 ET) 후 실행. 22:00 UTC = 서머타임 18:00 ET / 겨울 17:00 ET
+    - cron: "0 22 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Generate signal board
+        run: python publish.py
+
+      - name: Commit & push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "signal: $(date -u +%F) 일일 신호 갱신"
+            git push
+          fi
