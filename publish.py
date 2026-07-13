@@ -16,7 +16,9 @@ HISTORY = DOCS / "history.json"
 
 STATE_LABEL = {0: "기본 보유", 1: "TQQQ 진입 중", 2: "손절 후 현금 대기"}
 STATE_BADGE = {0: "base", 1: "tqqq", 2: "stopped"}
-STATE_ALLOC = {0: "QQQM 50% / QLD 50%", 1: "TQQQ 100%", 2: "QQQM 50% / 현금 50%"}
+STATE_ALLOC = {0: "QQQM 30% / QLD 70%",
+               1: "QQQM 30% / QLD 40% / TQQQ 30%",
+               2: "QQQM 30% / 현금 70%"}
 
 
 def build_record(s: dict) -> dict:
@@ -104,8 +106,9 @@ td.note {{ color:var(--muted); white-space:normal; }}
 </head>
 <body>
 <h1>QLD/TQQQ 일일 신호 게시판</h1>
-<p class="sub">규칙: QQQM 50/QLD 50 기본 보유 → QQQ 52주 고점 대비 -10% & 200일선 위에서 TQQQ 전환
-→ 전고점 회복 시 익절 / TQQQ -30% 트레일링 손절 · 매 거래일 장 마감 후 자동 갱신</p>
+<p class="sub">규칙: QQQM 30/QLD 70 기본 보유 → QQQ 52주 고점 대비 -10% & 200일선 위에서
+QLD 30%p를 TQQQ로 전환(30/40/30) → 전고점 회복 시 익절 / TQQQ -30% 트레일링 손절 시
+QLD 몫 현금 대피 · 매 거래일 장 마감 후 자동 갱신</p>
 
 <div class="card">
   <span class="badge {badge}">{latest['date']}</span>
@@ -128,7 +131,7 @@ td.note {{ color:var(--muted); white-space:normal; }}
 </table>
 </div>
 
-<p class="foot">백테스트(1999–2026, CAGR 20.0% / MDD -70%) 기반 리서치 도구이며 투자자문이 아닙니다.
+<p class="foot">백테스트(1999–2026, CAGR 16.0% / MDD -56%) 기반 리서치 도구이며 투자자문이 아닙니다.
 데이터: Yahoo Finance 수정종가. <a href="https://github.com/jeonck/qld-tqqq">GitHub</a></p>
 </body>
 </html>"""

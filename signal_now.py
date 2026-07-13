@@ -1,8 +1,8 @@
 """현재 시점 신호 상태 출력.
 
-최적 조합(QQQM 50 / QLD 50, 진입낙폭 -10%, 200일선 필터,
-익절 = 전고점 회복, 손절 = TQQQ -30% 트레일링)의 상태머신을
-오늘까지 실행해 현재 상태·목표 배분·트리거까지의 거리를 보여준다.
+운용 조합(QQQM 30 / QLD 70 기본, 진입낙폭 -10% & 200일선 위에서
+QLD 30%p → TQQQ 전환, 익절 = 전고점 회복, 손절 = TQQQ -30% 트레일링)의
+상태머신을 오늘까지 실행해 현재 상태·목표 배분·트리거까지의 거리를 보여준다.
 
 사용법:  python3 signal_now.py            # 캐시 데이터 사용
         python3 signal_now.py --refresh   # 최신 시세 다시 다운로드
@@ -14,8 +14,9 @@ import pandas as pd
 import data
 import scenarios as sc
 
-# 최적 조합 파라미터 (optimize.py 그리드 서치 결과)
-PARAMS = dict(base_qqq=0.5, dip_entry=-0.10, tqqq_frac=1.0,
+# 운용 파라미터: 심리적 안정성을 고려한 부분 전환형
+# (전량 전환 대비 CAGR 16.0% vs 19.9%, MDD -56% vs -61%)
+PARAMS = dict(base_qqq=0.3, dip_entry=-0.10, tqqq_frac=0.3,
               allow_below_sma=False, trail_stop=-0.30, defense=False)
 
 STATE_NAMES = {0: "기본 보유", 1: "TQQQ 진입 중", 2: "손절 후 현금 대기"}
@@ -78,7 +79,7 @@ def main():
     print(f"\n현재 상태: [{STATE_NAMES[state]}]\n")
 
     if state == 0:
-        print("목표 배분: QQQM 50% / QLD 50%")
+        print("목표 배분: QQQM 30% / QLD 70%")
         gap = s["dd"] - p["dip_entry"]
         trigger_px = s["high52"] * (1 + p["dip_entry"])
         if s["above_sma"]:
@@ -89,14 +90,14 @@ def main():
             print(f"  (200일선 {s['sma']:,.2f} 회복 + 낙폭 {p['dip_entry']:.0%} 필요)")
     elif state == 1:
         dd_tq = s["tqqq_px"] / s["tqqq_peak"] - 1
-        print("목표 배분: TQQQ 100%")
+        print("목표 배분: QQQM 30% / QLD 40% / TQQQ 30%")
         print(f"진입일          : {s['entry_date'].date()}")
         print(f"익절 목표       : QQQ {s['target_high']:,.2f} 회복 시 전량 익절 "
               f"(현재 {s['qqq'] / s['target_high'] - 1:+.1%})")
         print(f"손절 라인       : TQQQ 고점 대비 {p['trail_stop']:.0%} "
               f"(현재 {dd_tq:+.1%}, 여유 {dd_tq - p['trail_stop']:+.1%}p)")
     else:
-        print("목표 배분: QQQM 50% / 현금 50%")
+        print("목표 배분: QQQM 30% / 현금 70%")
         print(f"→ QQQ가 {s['target_high']:,.2f} (직전 전고점) 회복 시 "
               f"기본 배분으로 복귀 (현재 {s['qqq'] / s['target_high'] - 1:+.1%})")
 
