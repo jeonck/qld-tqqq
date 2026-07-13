@@ -23,26 +23,27 @@ STATE_ALLOC = {0: "QQQM 30% / QLD 70%",
 
 def build_record(s: dict) -> dict:
     p = signal_now.PARAMS
+    r = s["ratio"]  # 신호는 QQQ(장기 데이터)로 계산, 표시는 QQQM 가격
     rec = {
         "date": str(s["date"].date()),
         "state": s["state"],
         "state_label": STATE_LABEL[s["state"]],
         "alloc": STATE_ALLOC[s["state"]],
-        "qqq": round(float(s["qqq"]), 2),
-        "sma200": round(float(s["sma"]), 2),
+        "qqqm": round(float(s["qqq"] * r), 2),
+        "sma200": round(float(s["sma"] * r), 2),
         "above_sma": bool(s["above_sma"]),
-        "high52": round(float(s["high52"]), 2),
+        "high52": round(float(s["high52"] * r), 2),
         "dd": round(float(s["dd"]), 4),
     }
     if s["state"] == 0:
-        rec["note"] = (f"진입 트리거: QQQ {s['high52'] * (1 + p['dip_entry']):,.2f} 이하"
+        rec["note"] = (f"진입 트리거: QQQM {s['high52'] * (1 + p['dip_entry']) * r:,.2f} 이하"
                        if s["above_sma"] else "200일선 아래 — 진입 대기")
     elif s["state"] == 1:
         dd_tq = s["tqqq_px"] / s["tqqq_peak"] - 1
-        rec["note"] = (f"익절 목표 QQQ {s['target_high']:,.2f} / "
+        rec["note"] = (f"익절 목표 QQQM {s['target_high'] * r:,.2f} / "
                        f"손절 여유 {dd_tq - p['trail_stop']:+.1%}p")
     else:
-        rec["note"] = f"복귀 조건: QQQ {s['target_high']:,.2f} 회복"
+        rec["note"] = f"복귀 조건: QQQM {s['target_high'] * r:,.2f} 회복"
     return rec
 
 
@@ -60,7 +61,7 @@ def render_html(history: list) -> str:
         <td>{r['date']}</td>
         <td><span class="badge {STATE_BADGE[r['state']]}">{r['state_label']}</span></td>
         <td>{r['alloc']}</td>
-        <td class="num">{r['qqq']:,.2f}</td>
+        <td class="num">{r.get('qqqm', r.get('qqq', 0)):,.2f}</td>
         <td class="num">{r['dd']:+.1%}</td>
         <td class="num">{'▲' if r['above_sma'] else '▼'} {r['sma200']:,.2f}</td>
         <td class="note">{r['note']}</td>
@@ -114,7 +115,7 @@ QLD 몫 현금 대피 · 매 거래일 장 마감 후 자동 갱신</p>
   <span class="badge {badge}">{latest['date']}</span>
   <div class="state">{latest['state_label']} — {latest['alloc']}</div>
   <div class="grid">
-    <div><span>QQQ 종가</span><b>{latest['qqq']:,.2f}</b></div>
+    <div><span>QQQM 종가</span><b>{latest['qqqm']:,.2f}</b></div>
     <div><span>52주 고점 대비</span><b>{latest['dd']:+.1%}</b></div>
     <div><span>200일선 ({'위' if latest['above_sma'] else '아래'})</span><b>{latest['sma200']:,.2f}</b></div>
     <div><span>다음 액션</span><b style="font-size:.9rem">{latest['note']}</b></div>
@@ -123,7 +124,7 @@ QLD 몫 현금 대피 · 매 거래일 장 마감 후 자동 갱신</p>
 
 <div class="wrap">
 <table>
-<thead><tr><th>날짜</th><th>상태</th><th>목표 배분</th><th>QQQ</th><th>낙폭</th>
+<thead><tr><th>날짜</th><th>상태</th><th>목표 배분</th><th>QQQM</th><th>낙폭</th>
 <th>200일선</th><th>비고</th></tr></thead>
 <tbody>
 {rows}

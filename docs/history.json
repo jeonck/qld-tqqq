@@ -4,11 +4,11 @@
   "state": 0,
   "state_label": "기본 보유",
   "alloc": "QQQM 30% / QLD 70%",
-  "qqq": 725.51,
-  "sma200": 636.63,
+  "qqqm": 298.72,
+  "sma200": 262.13,
   "above_sma": true,
-  "high52": 745.34,
+  "high52": 306.89,
   "dd": -0.0266,
-  "note": "진입 트리거: QQQ 670.81 이하"
+  "note": "진입 트리거: QQQM 276.20 이하"
  }
 ]

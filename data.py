@@ -18,7 +18,7 @@ def download(force: bool = False) -> pd.DataFrame:
     import os
     if not force and os.path.exists(CACHE):
         return pd.read_parquet(CACHE)
-    px = yf.download(["QQQ", "QLD", "TQQQ", "^IRX"], start="1999-03-10",
+    px = yf.download(["QQQ", "QQQM", "QLD", "TQQQ", "^IRX"], start="1999-03-10",
                      auto_adjust=True, progress=False)["Close"]
     px = px.rename(columns={"^IRX": "IRX"})
     px.to_parquet(CACHE)
@@ -46,6 +46,7 @@ def build_dataset(force: bool = False) -> pd.DataFrame:
     df["TQQQ_syn"] = synth_leverage(qqq, irx, 3)
     df["QLD"] = px["QLD"]
     df["TQQQ"] = px["TQQQ"]
+    df["QQQM"] = px["QQQM"]  # 2020-10 상장, 표시용
     df["cash_ret"] = (irx.ffill() / 100 / TRADING_DAYS).reindex(df.index).fillna(0)
     return df
 
