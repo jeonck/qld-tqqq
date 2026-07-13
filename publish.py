@@ -86,6 +86,9 @@ body {{ background:var(--bg); color:var(--fg);
        max-width:960px; margin:0 auto; padding:2rem 1rem; }}
 h1 {{ font-size:1.4rem; margin-bottom:.3rem; }}
 .sub {{ color:var(--muted); font-size:.85rem; margin-bottom:1.5rem; }}
+.rules {{ color:var(--muted); font-size:.85rem; margin:0 0 1.5rem;
+         padding-left:1.2rem; line-height:1.8; }}
+.rules b {{ color:var(--fg); }}
 .card {{ background:var(--card); border:1px solid var(--line); border-radius:12px;
         padding:1.2rem 1.5rem; margin-bottom:2rem; }}
 .card .state {{ font-size:1.5rem; font-weight:700; margin:.2rem 0 .6rem; }}
@@ -107,9 +110,15 @@ td.note {{ color:var(--muted); white-space:normal; }}
 </head>
 <body>
 <h1>QLD/TQQQ 일일 신호 게시판</h1>
-<p class="sub">규칙: QQQM 30/QLD 70 기본 보유 → QQQM 52주 고점 대비 -10% & 200일선 위에서
-QQQM 전량을 TQQQ로 전환(QLD 70/TQQQ 30) → 진입 시점 전고점 회복 시 TQQQ 익절, QQQM 복귀
-/ TQQQ -30% 트레일링 손절 시 QQQM 30/현금 70 대피 · 매 거래일 장 마감 후 자동 갱신</p>
+<ul class="rules">
+<li><b>기본 보유</b> — QQQM 30% / QLD 70%</li>
+<li><b>TQQQ 진입</b> — QQQM이 52주 고점 대비 <b>-10%</b> 하락 &amp; <b>200일선 위</b>면
+QQQM 전량을 TQQQ로 전환 → QLD 70% / TQQQ 30%</li>
+<li><b>익절</b> — 진입 시점의 전고점 회복 시 TQQQ 전량 매도, QQQM 재매수 → 기본 보유 복귀</li>
+<li><b>손절</b> — TQQQ가 고점 대비 <b>-30%</b> 하락 시 청산 → QQQM 30% / 현금 70% 대피,
+전고점 회복까지 재진입 금지</li>
+<li>매 거래일 장 마감 후 자동 갱신</li>
+</ul>
 
 <div class="card">
   <span class="badge {badge}">{latest['date']}</span>
