@@ -2,8 +2,8 @@ name: daily-signal
 
 on:
   schedule:
-    # 미국 장 마감(16:00 ET) 후 실행. 22:00 UTC = 서머타임 18:00 ET / 겨울 17:00 ET
-    - cron: "0 22 * * 1-5"
+    # 미국 장 마감(16:00 ET) 후 실행. 22:49 UTC = 서머타임 18:49 ET / 겨울 17:49 ET (다른 프로젝트와 겹침 방지로 분산)
+    - cron: "49 22 * * 1-5"
   workflow_dispatch:
 
 permissions:
