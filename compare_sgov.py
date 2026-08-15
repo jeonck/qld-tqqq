@@ -160,7 +160,7 @@ def summarize(label, curve, book, n):
 # --------------------------------------------------------------------------
 def sim_sgov(idx, rets, ind, month_end, contrib=0.0, trim_band=0.65,
              trim_to=0.60, ladder="balance", tranche=0.125,
-             levels=(-0.10, -0.15, -0.20, -0.25)):
+             levels=(-0.10, -0.15, -0.20, -0.25), sma_gate=False):
     r = rets[["TQQQ", "cash"]].to_numpy()
     qqq, s200 = ind["qqq"].to_numpy(), ind["sma200"].to_numpy()
     high52 = ind["high52"].to_numpy()
@@ -206,9 +206,11 @@ def sim_sgov(idx, rets, ind, month_end, contrib=0.0, trim_band=0.65,
             n_trim += 1
 
         # ③ 낙폭 사다리: 구간별 SGOV 12.5%씩 TQQQ 투입(사이클당 1회)
+        # sma_gate=True면 200일선 아래에서는 발동을 보류하고, 회복 후 밀린 구간을 한 번에 집행
         dd = qqq[i] / high52[i] - 1
+        gate_open = (not sma_gate) or qqq[i] >= s200[i]
         for lv in levels:
-            if dd <= lv and lv not in fired:
+            if dd <= lv and lv not in fired and gate_open:
                 fired.add(lv)
                 amt = tranche * h[1] if ladder == "balance" else min(0.25 * cycle_sgov, h[1])
                 if amt > 0:
@@ -312,15 +314,17 @@ def sim_static(idx, rets, ind, month_end, contrib=0.0, w_tqqq=0.6, rebal=True):
 def run_all(idx, rets, ind, month_end, year_end, contrib):
     c1, b1, s1 = sim_sgov(idx, rets, ind, month_end, contrib)
     c2, b2, s2 = sim_sgov(idx, rets, ind, month_end, contrib, ladder="quarter")
-    c3, b3, s3 = sim_ours(idx, rets, ind, month_end, year_end, contrib)
-    c4, b4, _ = sim_static(idx, rets, ind, month_end, contrib, 0.6)
-    c5, b5, _ = sim_static(idx, rets, ind, month_end, contrib, 1.0, rebal=False)
+    c3, b3, s3 = sim_sgov(idx, rets, ind, month_end, contrib, sma_gate=True)
+    c4, b4, s4 = sim_ours(idx, rets, ind, month_end, year_end, contrib)
+    c5, b5, _ = sim_static(idx, rets, ind, month_end, contrib, 0.6)
+    c6, b6, _ = sim_static(idx, rets, ind, month_end, contrib, 1.0, rebal=False)
     return [
         (f"제안 60/40 (12.5%×SGOV잔고, 매수 {s1['사다리매수']}회/트림 {s1['트림']}회)", c1, b1),
         (f"제안 60/40 (SGOV 4등분 전액소진, 매수 {s2['사다리매수']}회)", c2, b2),
-        (f"현행 QQQM50/QLD50+TQQQ위성 (진입 {s3['TQQQ진입']}회/손절 {s3['손절']}회)", c3, b3),
-        ("[참고] TQQQ60/SGOV40 월말 고정 리밸런싱", c4, b4),
-        ("[참고] TQQQ 100% 보유", c5, b5),
+        (f"제안 60/40 + 200일선 게이트 (매수 {s3['사다리매수']}회)", c3, b3),
+        (f"현행 QQQM50/QLD50+TQQQ위성 (진입 {s4['TQQQ진입']}회/손절 {s4['손절']}회)", c4, b4),
+        ("[참고] TQQQ60/SGOV40 월말 고정 리밸런싱", c5, b5),
+        ("[참고] TQQQ 100% 보유", c6, b6),
     ]
 
 
