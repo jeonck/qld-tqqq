@@ -68,7 +68,16 @@ def prepare(df: pd.DataFrame):
 
 def load():
     import data
-    return prepare(data.build_dataset())
+    df = data.build_dataset()
+    # data.py는 ^IRX 다운로드가 실패해도 조용히 연 4% 고정으로 대체한다.
+    # 그 경우 TQQQ 합성 차입비용이 4%p 가까이 틀어져 표 전체가 바뀌므로 여기서 막는다.
+    cash = df["cash_ret"]
+    if cash.sum() <= 0 or (cash == 0).mean() > 0.05:
+        raise RuntimeError(
+            "^IRX(13주 국채금리) 데이터가 비어 있다. 합성 레버리지 비용이 "
+            "연 4% 고정값으로 대체돼 결과가 왜곡되므로 중단한다. 다시 실행할 것.")
+    print(f"현금금리(^IRX) 평균 {cash.mean() * TD:.2%}, 결측 {(cash == 0).mean():.2%}")
+    return prepare(df)
 
 
 def synthetic(n_years: int = 27, seed: int = 0):

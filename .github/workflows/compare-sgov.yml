@@ -18,4 +18,10 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
       - name: Run comparison
-        run: python compare_sgov.py
+        run: |
+          for i in 1 2 3; do
+            python compare_sgov.py && exit 0
+            echo "::warning::데이터 다운로드 실패, 재시도 $i"
+            sleep 20
+          done
+          exit 1
