@@ -1,5 +1,17 @@
 [
  {
+  "date": "2026-08-31",
+  "state": 1,
+  "state_label": "TQQQ 진입 중",
+  "alloc": "QQQM 20% / QLD 50% / TQQQ 30%",
+  "qqqm": 295.18,
+  "sma200": 269.61,
+  "above_sma": true,
+  "high52": 306.95,
+  "dd": -0.0383,
+  "note": "익절 목표 QQQM 306.95 / 손절 여유 +23.2%p"
+ },
+ {
   "date": "2026-08-28",
   "state": 1,
   "state_label": "TQQQ 진입 중",
