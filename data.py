@@ -21,6 +21,10 @@ def download(force: bool = False) -> pd.DataFrame:
     px = yf.download(["QQQ", "QQQM", "QLD", "TQQQ", "^IRX"], start="1999-03-10",
                      auto_adjust=True, progress=False)["Close"]
     px = px.rename(columns={"^IRX": "IRX"})
+    # 장기 히스토리 요청은 최신 봉이 하루 늦게 반영되는 경우가 있어 짧은 조회로 꼬리 보정
+    tail = yf.download(list(px.columns.str.replace("IRX", "^IRX")), period="1mo",
+                       auto_adjust=True, progress=False)["Close"]
+    px = tail.rename(columns={"^IRX": "IRX"}).combine_first(px)
     px.to_parquet(CACHE)
     return px
 
