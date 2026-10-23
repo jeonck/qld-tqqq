@@ -1,5 +1,17 @@
 [
  {
+  "date": "2026-10-22",
+  "state": 0,
+  "state_label": "기본 보유",
+  "alloc": "QQQM 50% / QLD 50%",
+  "qqqm": 290.13,
+  "sma200": 278.28,
+  "above_sma": true,
+  "high52": 312.86,
+  "dd": -0.0727,
+  "note": "진입 트리거: QQQM 281.57 이하"
+ },
+ {
   "date": "2026-10-21",
   "state": 0,
   "state_label": "기본 보유",
