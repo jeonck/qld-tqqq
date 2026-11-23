@@ -2,8 +2,10 @@ name: daily-signal
 
 on:
   schedule:
-    # 미국 장 마감(16:00 ET) 후 실행. 22:49 UTC = 서머타임 18:49 ET / 겨울 17:49 ET (다른 프로젝트와 겹침 방지로 분산)
-    - cron: "49 22 * * 1-5"
+    # 미국 장 마감(16:00 ET) 직후 실행. cron은 UTC 고정이라 서머/겨울 둘 다 걸고, 장 마감 전 실행은 아래 gate 스텝이 건너뛴다.
+    #   20:10 UTC = 서머타임 16:10 ET / 21:10 UTC = 겨울 16:10 ET
+    - cron: "10 20 * * 1-5"
+    - cron: "10 21 * * 1-5"
     # 2차 실행(익일 03:49 UTC): 1차에서 최신 봉 누락·스케줄 스킵 시 보정. 같은 날짜면 변경 없음으로 종료
     - cron: "49 3 * * 2-6"
   workflow_dispatch:
@@ -17,17 +19,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Gate (장 마감 전 스케줄 실행은 건너뜀)
+        id: gate
+        run: |
+          H=$(TZ=America/New_York date +%H%M)
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$H" -ge 0900 ] && [ "$H" -lt 1605 ]; then
+            echo "뉴욕 $H: 장 마감 전이라 건너뜀"; echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - if: steps.gate.outputs.run == 'true'
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install deps
+        if: steps.gate.outputs.run == 'true'
         run: pip install -r requirements.txt
 
       - name: Generate signal board
+        if: steps.gate.outputs.run == 'true'
         run: python publish.py
 
       - name: Commit & push
+        if: steps.gate.outputs.run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
