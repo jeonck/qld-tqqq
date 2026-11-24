@@ -1,5 +1,17 @@
 [
  {
+  "date": "2026-11-23",
+  "state": 2,
+  "state_label": "손절 후 현금 대기",
+  "alloc": "QQQM 30% / 현금 70%",
+  "qqqm": 267.97,
+  "sma200": 280.84,
+  "above_sma": false,
+  "high52": 312.68,
+  "dd": -0.143,
+  "note": "복귀 조건: QQQM 312.68 회복"
+ },
+ {
   "date": "2026-11-20",
   "state": 2,
   "state_label": "손절 후 현금 대기",
