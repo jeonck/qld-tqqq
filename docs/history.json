@@ -1,15 +1,15 @@
 [
  {
   "date": "2026-11-25",
-  "state": 2,
-  "state_label": "손절 후 현금 대기",
-  "alloc": "QQQM 30% / 현금 70%",
+  "state": 0,
+  "state_label": "기본 보유",
+  "alloc": "QQQM 50% / QLD 50%",
   "qqqm": 261.05,
-  "sma200": 281.07,
+  "sma200": NaN,
   "above_sma": false,
-  "high52": 312.83,
-  "dd": -0.1655,
-  "note": "복귀 조건: QQQM 312.83 회복"
+  "high52": 298.8,
+  "dd": -0.1263,
+  "note": "200일선 아래 — 진입 대기"
  },
  {
   "date": "2026-11-24",
